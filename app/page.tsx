@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import OrbScene from "./OrbScene";
 import { ArrowDown, ArrowUpRight, Github, Mail, Menu, X, Sparkles, Code2, Bot, Globe2, Smartphone, Cloud, Radio, Send, Cpu, Layers3 } from "lucide-react";
 
 const projects = [
@@ -40,7 +41,7 @@ export default function Home() {
           <div className="hero-meta"><span>BASED IN INDIA</span><span className="meta-line"/><span>AVAILABLE FOR NEW IDEAS</span></div>
         </div>
         <motion.div className="orb-stage" initial={{ opacity: 0, scale: .82 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, delay: .2 }}>
-          <div className="orb-halo halo-one"/><div className="orb-halo halo-two"/><div className="orb"><div className="orb-shine"/><div className="orb-core"/></div>
+          <div className="orb-halo halo-one"/><div className="orb-halo halo-two"/><div className="three-orb"><OrbScene /></div>
           <div className="orbit orbit-a"><i/></div><div className="orbit orbit-b"><i/></div><div className="orbit orbit-c"><i/></div>
           <div className="float-card card-top"><Sparkles size={14}/> <span>CREATIVE<br/>ENGINEERING</span></div>
           <div className="float-card card-bottom"><span className="mini-bars"><i/><i/><i/><i/></span><span>ALWAYS<br/>BUILDING</span></div>
