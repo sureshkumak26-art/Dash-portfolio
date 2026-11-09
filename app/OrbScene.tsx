@@ -10,8 +10,16 @@ function Core() {
   const ringA = useRef<THREE.Mesh>(null);
   const ringB = useRef<THREE.Mesh>(null);
   const satelliteGroup = useRef<THREE.Group>(null);
+  const sceneGroup = useRef<THREE.Group>(null);
 
   useFrame((state, delta) => {
+    // Follow mouse or touch position with a smooth, subtle 3D tilt.
+    if (sceneGroup.current) {
+      const targetX = -state.pointer.y * 0.24;
+      const targetY = state.pointer.x * 0.32;
+      sceneGroup.current.rotation.x = THREE.MathUtils.damp(sceneGroup.current.rotation.x, targetX, 3.5, delta);
+      sceneGroup.current.rotation.y = THREE.MathUtils.damp(sceneGroup.current.rotation.y, targetY, 3.5, delta);
+    }
     if (core.current) {
       core.current.rotation.y += delta * 0.16;
       core.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.25) * 0.12;
@@ -72,7 +80,7 @@ function Core() {
 
 export default function OrbScene() {
   return (
-    <Canvas camera={{ position: [0, 0, 4.1], fov: 42 }} dpr={[1, 1.5]} gl={{ alpha: true, antialias: true }}>
+    <Canvas camera={{ position: [0, 0, 4.1], fov: 42 }} dpr={[1, 1.5]} gl={{ alpha: true, antialias: true }} style={{ touchAction: "pan-y" }}>
       <ambientLight intensity={0.75} />
       <directionalLight position={[-3, 4, 4]} intensity={2.2} color="#e4fff0" />
       <Stars radius={8} depth={3} count={110} factor={1.5} saturation={0} fade speed={0.3} />
