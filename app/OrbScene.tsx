@@ -9,6 +9,8 @@ function Core() {
   const core = useRef<THREE.Mesh>(null);
   const ringA = useRef<THREE.Mesh>(null);
   const ringB = useRef<THREE.Mesh>(null);
+  const satelliteGroup = useRef<THREE.Group>(null);
+
   useFrame((state, delta) => {
     if (core.current) {
       core.current.rotation.y += delta * 0.16;
@@ -16,7 +18,12 @@ function Core() {
     }
     if (ringA.current) ringA.current.rotation.z += delta * 0.12;
     if (ringB.current) ringB.current.rotation.x -= delta * 0.1;
+    if (satelliteGroup.current) {
+      satelliteGroup.current.rotation.y += delta * 0.075;
+      satelliteGroup.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.2) * 0.08;
+    }
   });
+
   return (
     <group>
       <Float speed={1.2} rotationIntensity={0.16} floatIntensity={0.25}>
@@ -25,6 +32,8 @@ function Core() {
           <MeshDistortMaterial color="#78e9ad" emissive="#174d32" emissiveIntensity={0.65} roughness={0.2} metalness={0.62} distort={0.22} speed={1.6} />
         </mesh>
       </Float>
+
+      {/* Layered orbital rings create depth around the central crystal. */}
       <mesh ref={ringA} rotation={[1.12, 0.25, 0.35]}>
         <torusGeometry args={[1.48, 0.009, 12, 180]} />
         <meshBasicMaterial color="#b9ffda" transparent opacity={0.72} />
@@ -33,7 +42,30 @@ function Core() {
         <torusGeometry args={[1.68, 0.006, 12, 180]} />
         <meshBasicMaterial color="#83eeb5" transparent opacity={0.34} />
       </mesh>
+
+      {/* Small 3D satellites slowly orbit the core at different depths. */}
+      <group ref={satelliteGroup}>
+        <Float speed={1.7} rotationIntensity={0.7} floatIntensity={0.35}>
+          <mesh position={[1.72, 0.42, 0.15]} rotation={[0.4, 0.3, 0.2]}>
+            <octahedronGeometry args={[0.16, 0]} />
+            <meshStandardMaterial color="#c5ffe0" emissive="#4edc9b" emissiveIntensity={0.8} metalness={0.75} roughness={0.2} />
+          </mesh>
+        </Float>
+        <Float speed={1.35} rotationIntensity={0.8} floatIntensity={0.3}>
+          <mesh position={[-1.55, -0.55, 0.35]} rotation={[0.2, 0.7, 0.1]}>
+            <icosahedronGeometry args={[0.13, 0]} />
+            <meshStandardMaterial color="#9affca" emissive="#2d9d6c" emissiveIntensity={0.65} metalness={0.7} roughness={0.24} />
+          </mesh>
+        </Float>
+        <Float speed={1.9} rotationIntensity={0.9} floatIntensity={0.25}>
+          <mesh position={[0.55, -1.58, -0.3]} rotation={[0.5, 0.2, 0.6]}>
+            <tetrahedronGeometry args={[0.14, 0]} />
+            <meshStandardMaterial color="#e0fff0" emissive="#61d99e" emissiveIntensity={0.55} metalness={0.65} roughness={0.25} />
+          </mesh>
+        </Float>
+      </group>
       <pointLight position={[2, 2, 2]} intensity={24} color="#a4ffd2" />
+      <pointLight position={[-2, -1, -2]} intensity={7} color="#4fbd8c" />
     </group>
   );
 }
